@@ -3,311 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutomationX | Enterprise WhatsApp Automation</title>
+    <title>AutomationX | Intelligent Business Solutions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- 1. MODERN COLOR PALETTE & CORE STYLES --- */
+        /* --- 1. CORE VARIABLES --- */
         :root {
             --primary: #2563eb; /* Electric Blue */
-            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            --secondary: #0f172a; /* Midnight Navy (Dark Background) */
-            --accent: #38bdf8; /* Sky Blue Glow */
-            --text-dark: #1e293b;
-            --text-light: #64748b;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a; /* Midnight Navy */
+            --bg-light: #f8fafc;
             --white: #ffffff;
-            --light-bg: #f8fafc;
-            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+            --text-gray: #64748b;
+            --shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+            --card-hover: 0 20px 50px -10px rgba(37, 99, 235, 0.15);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        body { background-color: var(--white); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+        body { background-color: var(--white); color: var(--secondary); line-height: 1.6; overflow-x: hidden; }
 
-        /* --- 2. GLASS NAVBAR --- */
+        /* --- 2. NAVBAR --- */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 5%; 
-            background: rgba(255, 255, 255, 0.85); /* Translucent */
-            backdrop-filter: blur(12px); /* Frosted Glass Effect */
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            position: fixed; width: 100%; top: 0; z-index: 1000;
+            padding: 15px 5%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0; position: fixed; width: 100%; top: 0; z-index: 1000;
         }
-        .logo { font-size: 24px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
-        .logo i { color: var(--secondary); }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .logo span { color: var(--secondary); }
 
-        .nav-links { display: flex; gap: 30px; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; font-size: 15px; }
+        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--secondary); font-weight: 600; font-size: 15px; transition: 0.3s; }
         .nav-links a:hover { color: var(--primary); }
-        
-        .mobile-menu-btn { display: none; font-size: 24px; cursor: pointer; color: var(--dark); }
+        .hamburger { display: none; font-size: 24px; cursor: pointer; color: var(--secondary); }
 
-        /* Modern Gradient Buttons */
-        .btn { padding: 12px 28px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 15px; display: inline-block; }
-        .btn-primary { background: var(--primary-gradient); color: var(--white); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
+        .btn { padding: 12px 24px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 15px; white-space: nowrap; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4); }
         .btn-outline { border: 2px solid var(--secondary); background: transparent; color: var(--secondary); }
-        .btn-outline:hover { background: var(--secondary); color: var(--white); }
 
-        /* --- 3. DYNAMIC HERO SECTION --- */
+        /* --- 3. HERO SECTION --- */
         header { 
-            padding: 160px 5% 100px; display: flex; align-items: center; justify-content: space-between; 
+            padding: 150px 5% 80px; display: flex; align-items: center; justify-content: space-between; 
             background: radial-gradient(circle at top right, #eff6ff, #fff); flex-wrap: wrap; gap: 40px;
         }
         .hero-text { flex: 1; min-width: 300px; }
-        .hero-text h1 { 
-            font-size: 56px; line-height: 1.1; margin-bottom: 20px; color: var(--secondary); 
-            letter-spacing: -1.5px; font-weight: 900; 
+        .hero-text h1 { font-size: 52px; line-height: 1.15; margin-bottom: 20px; color: var(--secondary); letter-spacing: -1.5px; font-weight: 900; }
+        
+        /* Typewriter Cursor */
+        .typewriter-cursor { display: inline-block; width: 3px; height: 1em; background-color: var(--primary); margin-left: 5px; animation: blink 0.7s infinite; vertical-align: bottom; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .hero-text p { font-size: 18px; color: var(--text-gray); margin-bottom: 30px; max-width: 90%; }
+        .hero-btns { display: flex; gap: 15px; }
+        .hero-image { flex: 1; min-width: 300px; perspective: 1000px; }
+        .hero-image img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.5); animation: float 6s ease-in-out infinite; }
+
+        /* --- 4. WHY CHOOSE US --- */
+        .why-section { background: var(--secondary); color: white; padding: 80px 5%; }
+        .why-container { display: flex; flex-wrap: wrap; gap: 50px; align-items: center; }
+        .why-text { flex: 1; min-width: 300px; }
+        .why-text h2 { font-size: 36px; margin-bottom: 20px; color: #38bdf8; }
+        .why-list { list-style: none; }
+        .why-list li { margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 15px; }
+        .why-list li i { color: #4ade80; font-size: 20px; }
+        .why-image img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+
+        /* --- 5. SERVICES GRID --- */
+        .section-padding { padding: 100px 5%; }
+        .section-header { text-align: center; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .section-header h2 { font-size: 36px; margin-bottom: 15px; font-weight: 800; color: var(--secondary); }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card { 
+            padding: 40px; background: white; border: 1px solid #f1f5f9; border-radius: 20px; transition: all 0.3s ease; 
+            display: flex; flex-direction: column; align-items: flex-start; position: relative; overflow: hidden; cursor: pointer;
         }
-        .hero-text span { color: var(--primary); position: relative; }
-        /* Typing Cursor Animation */
-        .typewriter-cursor { border-right: 4px solid var(--primary); animation: blink 0.7s infinite; }
-        
-        .hero-text p { font-size: 20px; color: var(--text-light); margin-bottom: 35px; max-width: 90%; }
-        
-        .hero-image { flex: 1; min-width: 300px; position: relative; perspective: 1000px; }
-        .hero-image img { 
-            width: 100%; border-radius: 24px; 
-            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.15); 
-            border: 1px solid rgba(255,255,255,0.5);
-            animation: float 6s ease-in-out infinite; 
-        }
+        .card:hover { border-color: var(--primary); box-shadow: var(--card-hover); transform: translateY(-5px); }
+        .card i { font-size: 36px; color: var(--primary); margin-bottom: 20px; background: #eff6ff; padding: 15px; border-radius: 12px; }
+        .card h3 { font-size: 22px; margin-bottom: 10px; font-weight: 700; }
+        .card p { color: var(--text-gray); font-size: 15px; margin-bottom: 25px; line-height: 1.6; }
+        .card-link { color: var(--primary); font-weight: 700; font-size: 15px; margin-top: auto; }
 
-        /* --- 4. STATS STRIP --- */
-        .stats-bar { 
-            background: var(--secondary); color: white; padding: 50px 5%; 
-            display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center; 
-            border-radius: 0; margin-top: -40px; position: relative; z-index: 2;
-        }
-        .stat-item h3 { font-size: 42px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
-        .stat-item p { color: #94a3b8; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+        /* --- 6. INDUSTRIES --- */
+        .industries-section { background: var(--bg-light); padding: 80px 5%; text-align: center; }
+        .industry-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        .industry-tag { background: white; padding: 12px 25px; border-radius: 50px; font-weight: 600; color: var(--secondary); border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .industry-tag:hover { background: var(--primary); color: white; transform: scale(1.05); }
+        .industry-tag i { color: var(--primary); }
+        .industry-tag:hover i { color: white; }
 
-        /* --- 5. CARDS & SERVICES --- */
-        .section-container { padding: 100px 5%; }
-        .section-header { text-align: center; margin-bottom: 60px; max-width: 700px; margin: 0 auto 60px; }
-        .section-header h2 { font-size: 36px; font-weight: 800; color: var(--secondary); margin-bottom: 15px; }
-        .section-header p { color: var(--text-light); font-size: 18px; }
+        /* --- 7. HOW IT WORKS --- */
+        .works-section { padding: 100px 5%; text-align: center; }
+        .steps-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; margin-top: 50px; }
+        .step-card { flex: 1; min-width: 250px; max-width: 350px; padding: 30px; background: white; border: 1px solid #f1f5f9; border-radius: 20px; }
+        .step-number { width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
 
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-        .service-card { 
-            padding: 40px; border-radius: 20px; background: white; 
-            border: 1px solid #f1f5f9; transition: all 0.4s ease; 
-            position: relative; overflow: hidden;
-        }
-        .service-card:hover { 
-            transform: translateY(-10px); 
-            box-shadow: var(--card-shadow); 
-            border-color: var(--primary); 
-        }
-        .service-card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; background: #eff6ff; padding: 15px; border-radius: 12px; }
-        .service-card h3 { font-size: 22px; margin-bottom: 10px; font-weight: 700; }
-        .service-card p { color: var(--text-light); margin-bottom: 20px; font-size: 15px; }
-        .service-link { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        /* --- 8. PRICING --- */
+        .pricing-section { background: var(--bg-light); padding: 100px 5%; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+        
+        .pricing-card { background: white; padding: 40px; border-radius: 24px; border: 1px solid #e2e8f0; text-align: center; position: relative; transition: 0.3s; }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); }
+        .pricing-card.popular { border: 2px solid var(--primary); transform: scale(1.05); z-index: 2; box-shadow: var(--card-hover); }
+        .pricing-card.popular:hover { transform: scale(1.08); }
+        .badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 6px 16px; font-size: 12px; border-radius: 20px; font-weight: 700; letter-spacing: 1px; }
+        .price { font-size: 48px; font-weight: 800; margin: 20px 0; color: var(--secondary); }
+        .price span { font-size: 16px; color: var(--text-gray); font-weight: 500; }
+        .features-list { list-style: none; text-align: left; margin: 30px 0; }
+        .features-list li { margin-bottom: 15px; color: var(--text-gray); font-size: 15px; display: flex; align-items: center; gap: 10px; }
+        .features-list li i { color: #22c55e; }
 
-        /* --- 6. ROI CALCULATOR --- */
-        .roi-section { background: var(--light-bg); }
-        .roi-container { background: white; max-width: 900px; margin: 0 auto; padding: 50px; border-radius: 24px; box-shadow: var(--card-shadow); display: flex; flex-wrap: wrap; gap: 40px; }
-        .roi-inputs { flex: 1; min-width: 300px; }
-        .roi-inputs label { font-weight: 600; display: block; margin-bottom: 8px; color: var(--secondary); }
-        .roi-inputs input { width: 100%; padding: 14px; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; transition: 0.3s; }
-        .roi-inputs input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        
-        .roi-result { flex: 1; background: var(--secondary); color: white; padding: 40px; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative; overflow: hidden; }
-        .roi-result::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); }
-        .roi-result .amount { font-size: 52px; font-weight: 900; color: var(--accent); margin: 10px 0; }
+        /* --- 9. ROI CALCULATOR --- */
+        .roi-box { background: white; padding: 50px; border-radius: 24px; box-shadow: var(--shadow); display: flex; flex-wrap: wrap; gap: 40px; border: 1px solid #e2e8f0; }
+        .roi-inputs { flex: 1; min-width: 280px; }
+        .roi-inputs input { width: 100%; padding: 14px; margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 10px; }
+        .roi-result { flex: 1; min-width: 280px; background: var(--secondary); color: white; padding: 40px; border-radius: 20px; text-align: center; }
+        .roi-result .amount { font-size: 48px; font-weight: 800; color: #38bdf8; margin: 10px 0; }
 
-        /* --- 7. PRICING --- */
-        .price-card { background: white; padding: 40px; border-radius: 24px; text-align: center; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
-        .price-card.popular { border: 2px solid var(--primary); transform: scale(1.05); box-shadow: 0 20px 50px rgba(37, 99, 235, 0.15); z-index: 2; }
-        .badge { background: var(--primary); color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; letter-spacing: 1px; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); }
-        .price { font-size: 48px; font-weight: 800; color: var(--secondary); margin: 20px 0; }
-        .price span { font-size: 16px; color: var(--text-light); font-weight: 500; }
+        /* --- 10. MODALS --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+        .modal-content { background-color: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 450px; position: relative; animation: fadeUp 0.3s ease; }
         
-        /* --- 8. CHATBOT UI (Apple/iMessage Style) --- */
-        .chatbot-toggler { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--secondary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 999; transition: 0.3s; }
-        .chatbot-toggler:hover { transform: scale(1.1); background: var(--primary); }
-        
-        .chatbot-window { position: fixed; right: 35px; bottom: 100px; width: 360px; background: white; border-radius: 20px; overflow: hidden; opacity: 0; pointer-events: none; transform: scale(0.9); transform-origin: bottom right; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 60px rgba(0,0,0,0.2); z-index: 1000; }
-        .show-chatbot .chatbot-window { opacity: 1; pointer-events: auto; transform: scale(1); }
-        
-        .chat-header { background: var(--secondary); padding: 18px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .chat-box { height: 320px; overflow-y: auto; padding: 20px; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; }
-        
-        .chat-message p { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 14px; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .chat-message.bot p { background: white; border-bottom-left-radius: 4px; color: var(--text-dark); }
-        .chat-message.user { align-self: flex-end; }
-        .chat-message.user p { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
-        
-        .chat-input { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; background: white; }
-        .chat-input textarea { width: 100%; border: none; outline: none; resize: none; height: 40px; font-size: 14px; background: transparent; }
-        #sendBtn { color: var(--primary); font-size: 20px; cursor: pointer; align-self: center; }
+        /* Success Message Style */
+        #successView { display: none; text-align: center; }
+        #successView i { font-size: 60px; color: #22c55e; margin-bottom: 20px; display: block; }
 
-        /* --- 9. MODAL & FOOTER --- */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background-color: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 450px; position: relative; animation: fadeUp 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
-        
+        /* Feature Modal Specifics */
+        #featureModal .modal-content { max-width: 500px; text-align: left; }
+        #featureModal h2 { color: var(--primary); margin-bottom: 10px; }
+        #featureList li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        #featureList li i { color: #4ade80; }
+
+        /* Footer */
         footer { background: var(--secondary); color: #94a3b8; padding: 80px 5% 30px; }
         .footer-top h4 { color: white; font-size: 18px; margin-bottom: 20px; }
-        .footer-top a { color: #94a3b8; text-decoration: none; display: block; margin-bottom: 12px; transition: 0.3s; }
+        .footer-top a { color: #94a3b8; text-decoration: none; display: block; margin-bottom: 10px; transition: 0.3s; }
         .footer-top a:hover { color: var(--primary); }
 
-        /* Animations */
+        /* Chatbot */
+        .chatbot-toggler { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--secondary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 999; }
+        .chatbot-window { position: fixed; right: 35px; bottom: 100px; width: 350px; background: white; border-radius: 15px; overflow: hidden; opacity: 0; pointer-events: none; transform: scale(0.8); transition: 0.3s; z-index: 1000; }
+        .show-chatbot .chatbot-window { opacity: 1; pointer-events: auto; transform: scale(1); }
+        .chat-header { background: var(--secondary); padding: 18px; color: white; display: flex; justify-content: space-between; }
+        .chat-box { height: 320px; overflow-y: auto; padding: 20px; background: #f1f5f9; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message p { padding: 12px 15px; border-radius: 15px; max-width: 85%; font-size: 14px; }
+        .chat-message.bot p { background: white; border: 1px solid #e2e8f0; }
+        .chat-message.user p { background: var(--primary); color: white; align-self: flex-end; }
+        .chat-message.user { align-self: flex-end; }
+        .chat-input { padding: 15px; background: white; display: flex; gap: 10px; border-top: 1px solid #e2e8f0; }
+        .chat-input textarea { width: 100%; border: none; outline: none; resize: none; height: 40px; font-size: 14px; padding-top: 8px; }
+
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-        @keyframes blink { 50% { border-color: transparent; } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Mobile Responsiveness */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .mobile-menu-btn { display: block; }
-            .nav-links { position: fixed; top: 70px; left: -100%; width: 100%; height: 100vh; background: white; flex-direction: column; align-items: center; padding-top: 50px; transition: 0.4s ease; }
-            .nav-links.active { left: 0; }
+            .hamburger { display: block; }
+            .nav-links { position: fixed; top: 0; right: -100%; height: 100vh; width: 75%; background: white; flex-direction: column; align-items: flex-start; padding: 80px 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s ease; }
+            .nav-links.active { right: 0; }
             header { padding-top: 120px; text-align: center; flex-direction: column-reverse; }
             .hero-text h1 { font-size: 40px; }
-            .price-card.popular { transform: scale(1); }
-            .chatbot-window { width: 90%; right: 5%; bottom: 90px; }
+            .hero-btns { flex-direction: column; }
+            .why-container { flex-direction: column-reverse; }
+            .chatbot-window { width: 90%; right: 5%; bottom: 80px; }
+            .pricing-card.popular { transform: scale(1); margin: 20px 0; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo"><i class="fa-solid fa-layer-group"></i> AutomationX</div>
-        <div class="mobile-menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+        <div class="logo"><span>Automation</span>X</div>
+        <div class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
         <ul class="nav-links">
+            <li style="width:100%; text-align:right; display:none;" class="mobile-close" onclick="toggleMenu()"><i class="fa-solid fa-xmark" style="font-size:24px;"></i></li>
+            <style> @media(max-width:768px){ .mobile-close { display:block !important; } } </style>
             <li><a href="#services" onclick="toggleMenu()">Services</a></li>
-            <li><a href="#roi" onclick="toggleMenu()">Calculator</a></li>
             <li><a href="#pricing" onclick="toggleMenu()">Pricing</a></li>
-            <li><button class="btn btn-primary" onclick="openModal(); toggleMenu();">Get Free Demo</button></li>
+            <li><a href="#roi" onclick="toggleMenu()">Calculator</a></li>
+            <li><button class="btn btn-primary" onclick="openBookingModal('General'); toggleMenu();">Book Demo</button></li>
         </ul>
     </nav>
 
     <header>
         <div class="hero-text">
             <h1>Scale Your Business with <br>
-                <span id="typewriter">WhatsApp Bots</span><span class="typewriter-cursor"></span>
+                <span id="typewriter" style="color: var(--primary);">AutomationX</span><span class="typewriter-cursor"></span>
             </h1>
-            <p>Stop chasing leads manually. Let our AI-powered digital employees handle customer queries, invoices, and marketing 24/7.</p>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; md:justify-content: flex-start;">
-                <button class="btn btn-primary" onclick="openModal()">Start Automating</button>
-                <button class="btn btn-outline" onclick="document.getElementById('roi').scrollIntoView()">Calculate Savings</button>
+            <p>Stop replying manually. Let our digital employees handle customer queries, invoices, and marketing 24/7.</p>
+            <div class="hero-btns">
+                <button class="btn btn-primary" onclick="openBookingModal('General')">Start Free Trial</button>
+                <button class="btn btn-outline" onclick="document.getElementById('roi').scrollIntoView()">Check Savings</button>
             </div>
-            <p style="margin-top: 20px; font-size: 13px; color: var(--text-light);"><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Official Meta Partner APIs</p>
+            <p style="margin-top:20px; font-size:13px; color:#64748b;"><i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> Official Meta Partner APIs</p>
         </div>
         <div class="hero-image">
             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dashboard">
         </div>
     </header>
 
-    <section class="stats-bar">
-        <div class="stat-item"><h3>50+</h3><p>Hours Saved/Week</p></div>
-        <div class="stat-item"><h3>₹2Cr+</h3><p>Revenue Generated</p></div>
-        <div class="stat-item"><h3>24/7</h3><p>Zero Downtime</p></div>
-        <div class="stat-item"><h3>100%</h3><p>Secure & Private</p></div>
+    <section class="why-section">
+        <div class="why-container">
+            <div class="why-text">
+                <h2>Why Choose Us?</h2>
+                <ul class="why-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Boost sales without hiring staff</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Fully automated customer support</li>
+                    <li><i class="fa-solid fa-circle-check"></i> WhatsApp & AI-powered systems</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Affordable for small business</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 24/7 support available</li>
+                </ul>
+                <button class="btn btn-primary" onclick="openBookingModal('Consultation')" style="margin-top: 30px; background: white; color: var(--primary);">Join the Revolution</button>
+            </div>
+            <div class="why-image">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Team">
+            </div>
+        </div>
     </section>
 
-    <section id="services" class="section-container">
+    <section id="services" class="section-padding">
         <div class="section-header">
-            <h2>Everything You Need to Grow</h2>
-            <p>We don't just build bots; we build complete business systems.</p>
+            <h2>🔥 WhatsApp Automation Features</h2>
+            <p>Click any feature to see details.</p>
         </div>
-        <div class="services-grid">
-            <div class="service-card">
+        <div class="grid-container">
+            <div class="card" onclick="openFeatureModal('autoreply')">
                 <i class="fa-brands fa-whatsapp"></i>
-                <h3>Auto-Reply Agents</h3>
-                <p>Instantly answer "Price?", "Location?", and "Menu?" queries. Never miss a lead while you sleep.</p>
-                <a href="#" class="service-link" onclick="openModal()">See Live Demo <i class="fa-solid fa-arrow-right"></i></a>
+                <h3>Auto-Reply Bot</h3>
+                <p>Instantly answers FAQs like "Price?", "Location?" 24/7.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
             </div>
-            <div class="service-card">
+            <div class="card" onclick="openFeatureModal('booking')">
+                <i class="fa-solid fa-calendar-check"></i>
+                <h3>Booking Bot</h3>
+                <p>Automate appointments for salons & clinics directly on WhatsApp.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="card" onclick="openFeatureModal('product')">
+                <i class="fa-solid fa-box-open"></i>
+                <h3>Product Info Bot</h3>
+                <p>Showcase your catalog. Customers get details instantly.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="card" onclick="openFeatureModal('invoice')">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
-                <h3>Smart Invoicing</h3>
-                <p>Connects to Tally/Zoho. Automatically generates and sends PDF invoices on WhatsApp after payment.</p>
-                <a href="#" class="service-link" onclick="openModal()">Try Template <i class="fa-solid fa-arrow-right"></i></a>
+                <h3>Invoice Bot</h3>
+                <p>Auto-generates and sends PDF bills via WhatsApp.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
             </div>
-            <div class="service-card">
+            <div class="card" onclick="openFeatureModal('broadcast')">
                 <i class="fa-solid fa-bullhorn"></i>
-                <h3>Viral Broadcasting</h3>
-                <p>Send festival offers and catalogs to 10,000+ customers safely without getting blocked.</p>
-                <a href="#" class="service-link" onclick="openModal()">Start Campaign <i class="fa-solid fa-arrow-right"></i></a>
+                <h3>Offer Broadcast</h3>
+                <p>Send festival offers to 10,000+ customers safely.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="card" onclick="openFeatureModal('feedback')">
+                <i class="fa-solid fa-star"></i>
+                <h3>Feedback Bot</h3>
+                <p>Collect customer reviews and ratings automatically.</p>
+                <span class="card-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
             </div>
         </div>
     </section>
 
-    <section id="roi" class="section-container roi-section">
+    <section class="industries-section">
         <div class="section-header">
-            <h2>Instant ROI Calculator</h2>
-            <p>See exactly how much money AutomationX saves you monthly.</p>
+            <h2>🎯 Industries We Help</h2>
         </div>
-        <div class="roi-container">
-            <div class="roi-inputs">
-                <label>Messages received per day</label>
-                <input type="number" id="msgsPerDay" value="50" oninput="calculateROI()">
-                <label>Minutes spent per message</label>
-                <input type="number" id="minsPerMsg" value="3" oninput="calculateROI()">
-                <label>Your Hourly Value (₹)</label>
-                <input type="number" id="hourlyRate" value="500" oninput="calculateROI()">
-            </div>
-            <div class="roi-result">
-                <p style="color: #94a3b8; font-weight: 600; letter-spacing: 1px;">YOU SAVE MONTHLY</p>
-                <div class="amount">₹<span id="savingsResult">37,500</span></div>
-                <p style="margin-top:15px; color:#cbd5e1;">That's <span id="hoursResult" style="color:white; font-weight:bold;">75</span> hours of manual work eliminated!</p>
-            </div>
+        <div class="industry-grid">
+            <div class="industry-tag"><i class="fa-solid fa-shop"></i> Retail</div>
+            <div class="industry-tag"><i class="fa-solid fa-utensils"></i> Restaurants</div>
+            <div class="industry-tag"><i class="fa-solid fa-scissors"></i> Salons</div>
+            <div class="industry-tag"><i class="fa-solid fa-dumbbell"></i> Gyms</div>
+            <div class="industry-tag"><i class="fa-solid fa-house"></i> Real Estate</div>
+            <div class="industry-tag"><i class="fa-solid fa-user-doctor"></i> Clinics</div>
+            <div class="industry-tag"><i class="fa-solid fa-plane"></i> Travel</div>
         </div>
     </section>
 
-    <section id="pricing" class="section-container">
+    <section id="pricing" class="pricing-section">
         <div class="section-header">
             <h2>Transparent Pricing</h2>
-            <p>Invest in efficiency. Cancel anytime.</p>
+            <p>Invest in automation. Cancel anytime.</p>
         </div>
-        <div class="services-grid" style="max-width: 1100px; margin: 0 auto;">
-            <div class="price-card">
+        <div class="pricing-grid">
+            <div class="pricing-card">
                 <h3>Starter</h3>
                 <div class="price">₹2,500<span>/mo</span></div>
-                <ul style="list-style:none; text-align:left; margin:30px 0; color:#64748b;">
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> WhatsApp Auto-Reply</li>
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Basic Invoicing</li>
+                <ul class="features-list">
+                    <li><i class="fa-solid fa-check"></i> WhatsApp Auto-Reply</li>
+                    <li><i class="fa-solid fa-check"></i> Basic Invoice Automation</li>
+                    <li><i class="fa-solid fa-check"></i> 500 Conversations</li>
                 </ul>
-                <button class="btn btn-outline" style="width:100%" onclick="openModal()">Select Starter</button>
+                <button class="btn btn-outline" style="width:100%" onclick="openBookingModal('Starter Plan')">Select Starter</button>
             </div>
-            <div class="price-card popular">
+            <div class="pricing-card popular">
                 <div class="badge">MOST POPULAR</div>
                 <h3>Growth</h3>
                 <div class="price">₹5,000<span>/mo</span></div>
-                <ul style="list-style:none; text-align:left; margin:30px 0; color:#64748b;">
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> <strong>Everything in Starter</strong></li>
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Birthday Automation</li>
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Broadcast Campaigns</li>
+                <ul class="features-list">
+                    <li><i class="fa-solid fa-check"></i> <strong>Everything in Starter</strong></li>
+                    <li><i class="fa-solid fa-check"></i> Birthday Automation</li>
+                    <li><i class="fa-solid fa-check"></i> Offer Broadcasts</li>
+                    <li><i class="fa-solid fa-check"></i> Priority Support</li>
                 </ul>
-                <button class="btn btn-primary" style="width:100%" onclick="openModal()">Select Growth</button>
+                <button class="btn btn-primary" style="width:100%" onclick="openBookingModal('Growth Plan')">Select Growth</button>
             </div>
-            <div class="price-card">
-                <h3>Enterprise</h3>
-                <div class="price">Custom</div>
-                <ul style="list-style:none; text-align:left; margin:30px 0; color:#64748b;">
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Custom API Integrations</li>
-                    <li style="margin-bottom:10px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:10px;"></i> Green Tick Verification</li>
+            <div class="pricing-card">
+                <h3>Pro</h3>
+                <div class="price">₹10,000<span>/mo</span></div>
+                <ul class="features-list">
+                    <li><i class="fa-solid fa-check"></i> <strong>All Services</strong></li>
+                    <li><i class="fa-solid fa-check"></i> Custom Workflow Design</li>
+                    <li><i class="fa-solid fa-check"></i> Green Tick Assistance</li>
+                    <li><i class="fa-solid fa-check"></i> Dedicated Manager</li>
                 </ul>
-                <button class="btn btn-outline" style="width:100%" onclick="openModal()">Contact Sales</button>
+                <button class="btn btn-outline" style="width:100%" onclick="openBookingModal('Pro Plan')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="roi" class="section-padding roi-section">
+        <div class="section-header"><h2>Calculate Savings</h2></div>
+        <div class="roi-box">
+            <div class="roi-inputs">
+                <label>Messages / Day</label>
+                <input type="number" id="msgs" value="50" oninput="calc()">
+                <label>Mins / Message</label>
+                <input type="number" id="mins" value="3" oninput="calc()">
+                <label>Hourly Rate (₹)</label>
+                <input type="number" id="rate" value="500" oninput="calc()">
+            </div>
+            <div class="roi-result">
+                <p style="font-size:14px; opacity:0.8;">MONTHLY SAVINGS</p>
+                <div class="amount">₹<span id="save">37,500</span></div>
+                <p style="margin-top:10px;">Time Saved: <span id="hours">75</span> hrs</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px;" class="footer-top">
-            <div>
-                <h4 style="color:white; font-size:20px;">AutomationX</h4>
-                <p>The future of business is automated.</p>
+        <div class="footer-top" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:40px;">
+            <div style="flex:1.5; min-width:300px;">
+                <h4 style="color:white;">🧾 About Us</h4>
+                <p style="color:#cbd5e1; margin-bottom:15px;">We are an AI-Powered automation agency helping small and medium businesses grow.</p>
+                <p style="color:#cbd5e1; font-style:italic;">"Making automation affordable and accessible to every Indian business."</p>
             </div>
-            <div>
-                <h4>Company</h4>
+            <div style="flex:1; min-width:200px;">
+                <h4 style="color:white;">⚡ Quick Links</h4>
                 <a href="#services">Services</a>
                 <a href="#pricing">Pricing</a>
-                <a href="#">Case Studies</a>
+                <a href="#roi">Calculator</a>
             </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="https://wa.me/918619152422">+91 86191 52422</a>
-                <a href="mailto:support@automationx.com">support@automationx.com</a>
+            <div style="flex:1; min-width:200px;">
+                <h4 style="color:white;">📞 Contact Us</h4>
+                <p style="color:#cbd5e1; margin-bottom:10px;"><i class="fa-brands fa-whatsapp" style="color:var(--primary);"></i> +91 86191 52422</p>
+                <p style="margin-bottom:10px; display: flex; align-items: center; gap: 8px; color: #cbd5e1;">
+                    <i class="fa-solid fa-envelope" style="color:var(--primary);"></i> 
+                    <a href="mailto:support@automationx.com" style="color:#cbd5e1; text-decoration:none;">support@automationx.com</a>
+                </p>
+                <p style="color:#cbd5e1;"><i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> Jaipur, India</p>
             </div>
         </div>
         <div style="text-align:center; border-top:1px solid #334155; padding-top:30px; margin-top:40px;">
@@ -317,74 +372,135 @@
 
     <div id="demoModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 style="text-align:center; margin-bottom:10px; color:var(--secondary);">Book Free Demo</h2>
-            <p style="text-align:center; color:#64748b; margin-bottom:25px;">We will contact you on WhatsApp instantly.</p>
-            <form id="demo-form">
-                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE"> <div style="margin-bottom:15px;">
-                    <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding:12px; border:1px solid #e2e8f0; border-radius:8px;">
-                </div>
-                <div style="margin-bottom:15px;">
-                    <input type="tel" name="phone" placeholder="WhatsApp Number" required style="width:100%; padding:12px; border:1px solid #e2e8f0; border-radius:8px;">
-                </div>
-                <div style="margin-bottom:20px;">
-                    <input type="email" name="email" placeholder="Email Address" required style="width:100%; padding:12px; border:1px solid #e2e8f0; border-radius:8px;">
-                </div>
-                <button type="submit" id="formSubmitBtn" class="btn btn-primary" style="width:100%;">Secure My Spot</button>
-            </form>
+            <span onclick="closeModal('demoModal')" style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:24px; color:#999;">&times;</span>
+            
+            <div id="formView">
+                <h2 style="text-align:center; margin-bottom:15px; color:var(--secondary);">Get Free Demo</h2>
+                <p style="text-align:center; margin-bottom:20px; color:#64748b;">Fill the form and we'll contact you within 24 hours.</p>
+                <form id="demo-form" style="display:flex; flex-direction:column; gap:15px;">
+                    <input type="hidden" name="access_key" value=aa95edcc-552a-4115-a756-66f8a8cffea0>
+                    
+                    <select id="serviceSelect" name="service" style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+                        <option value="General">General Inquiry</option>
+                        <option value="Auto-Reply Bot">Auto-Reply Bot</option>
+                        <option value="Booking Bot">Booking Bot</option>
+                        <option value="Invoicing">Smart Invoicing</option>
+                        <option value="Broadcasting">Broadcasting</option>
+                        <option value="Feedback">Feedback Bot</option>
+                        <option value="Starter Plan">Starter Plan</option>
+                        <option value="Growth Plan">Growth Plan</option>
+                        <option value="Pro Plan">Pro Plan</option>
+                    </select>
+                    <input type="text" name="name" placeholder="Name" required style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+                    <input type="tel" name="phone" placeholder="Phone" required style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+                    <input type="email" name="email" placeholder="Email" required style="padding:12px; border:1px solid #ddd; border-radius:8px;">
+                    <button type="submit" id="formSubmitBtn" class="btn btn-primary">Book Now</button>
+                </form>
+            </div>
+
+            <div id="successView">
+                <i class="fa-solid fa-circle-check"></i>
+                <h3>Booking Confirmed!</h3>
+                <p>Thank you! Our team has received your request and will contact you within 24 hours.</p>
+                <button onclick="closeModal('demoModal')" class="btn btn-outline" style="width:100%;">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="featureModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('featureModal')">&times;</span>
+            <h2 id="featureTitle">Feature Name</h2>
+            <p id="featureDesc">Description goes here...</p>
+            <ul id="featureList" class="feature-list"></ul>
+            <button id="featureBtn" class="btn btn-primary" style="width:100%;">Get This Bot</button>
         </div>
     </div>
 
     <button class="chatbot-toggler"><i class="fa-solid fa-robot"></i></button>
     <div class="chatbot-window">
         <div class="chat-header">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:10px; height:10px; background:#4ade80; border-radius:50%;"></div>
-                <h3 style="font-size:16px; margin:0;">AutoBot AI</h3>
-            </div>
+            <h3>AutoBot AI</h3>
             <span class="close-chat"><i class="fa-solid fa-xmark"></i></span>
         </div>
         <div class="chat-box" id="chatBox">
-            <div class="chat-message bot"><p>Hello! 👋 I can help you automate your business. Try asking "What is the price?"</p></div>
+            <div class="chat-message bot"><p>Hello! 👋 Need help automating?</p></div>
         </div>
         <div class="chat-input">
-            <textarea id="chatInput" placeholder="Type your message..."></textarea>
-            <span id="sendBtn"><i class="fa-solid fa-location-arrow"></i></span>
+            <textarea id="chatInput" placeholder="Type message..."></textarea>
+            <span id="sendBtn"><i class="fa-solid fa-paper-plane"></i></span>
         </div>
     </div>
 
     <script>
-        // 1. TYPEWRITER EFFECT
-        const words = ["WhatsApp Bots", "Smart Invoicing", "Auto-Marketing", "Business Growth"];
-        let i = 0, timer;
-        
+        // 1. CONFIGURATION (UPDATE IF MOBILE)
+        const API_URL = "http://localhost:3000/chat"; 
+
+        // 2. TYPEWRITER
+        const words = ["AutomationX", "WhatsApp AI", "Smart Invoicing", "Auto-Marketing"];
+        let i = 0;
         function typeWriter() {
             const heading = document.getElementById("typewriter");
             heading.textContent = words[i];
             i = (i + 1) % words.length;
         }
-        setInterval(typeWriter, 2500); // Change text every 2.5s
+        setInterval(typeWriter, 2500);
 
-        // 2. UPDATE YOUR API URL HERE
-        const API_URL = "https://automationx-backend.onrender.com/chat"; 
-
-        // 3. LOGIC FOR CALCULATOR, MODAL, CHAT
+        // 3. UI FUNCTIONS
         function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
-        
-        function calculateROI() {
-            const msgs = document.getElementById('msgsPerDay').value;
-            const mins = document.getElementById('minsPerMsg').value;
-            const rate = document.getElementById('hourlyRate').value;
-            document.getElementById('savingsResult').innerText = Math.round(((msgs * mins) / 60) * 30 * rate).toLocaleString();
-            document.getElementById('hoursResult').innerText = Math.round(((msgs * mins) / 60) * 30);
+        function calc() {
+            const msgs = document.getElementById('msgs').value;
+            const mins = document.getElementById('mins').value;
+            const rate = document.getElementById('rate').value;
+            document.getElementById('save').innerText = Math.round(((msgs*mins)/60)*30*rate).toLocaleString();
+            document.getElementById('hours').innerText = Math.round(((msgs*mins)/60)*30);
         }
 
-        const modal = document.getElementById("demoModal");
-        function openModal() { modal.style.display = "flex"; }
-        function closeModal() { modal.style.display = "none"; }
-        window.onclick = function(e) { if (e.target == modal) closeModal(); }
+        // 4. MODALS
+        const demoModal = document.getElementById("demoModal");
+        const featureModal = document.getElementById("featureModal");
+        const formView = document.getElementById("formView");
+        const successView = document.getElementById("successView");
 
-        // CHATBOT LOGIC
+        function openBookingModal(serviceName) {
+            document.getElementById('serviceSelect').value = serviceName;
+            formView.style.display = "block";
+            successView.style.display = "none";
+            demoModal.style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        window.onclick = function(e) {
+            if (e.target == demoModal) demoModal.style.display = "none";
+            if (e.target == featureModal) featureModal.style.display = "none";
+        }
+
+        // 5. FEATURES
+        const features = {
+            'autoreply': { title: '🤖 AI Auto-Reply', desc: 'Answers FAQs instantly.', list: ['24/7 Support', 'Instant Responses'], service: 'Auto-Reply Bot' },
+            'booking': { title: '📅 Booking Bot', desc: 'Automates appointments.', list: ['Calendar Sync', 'Reminders'], service: 'Booking Bot' },
+            'product': { title: '📦 Product Bot', desc: 'Showcase catalog.', list: ['Images & Prices', 'Buy Now Links'], service: 'Product Info Bot' },
+            'invoice': { title: '🧾 Invoice Bot', desc: 'Send PDF bills.', list: ['Auto-Generate', 'Tally Sync'], service: 'Invoicing' },
+            'broadcast': { title: '📢 Broadcasting', desc: 'Send bulk offers.', list: ['98% Open Rate', 'Safe Sending'], service: 'Broadcasting' },
+            'feedback': { title: '⭐ Feedback Bot', desc: 'Collect reviews.', list: ['Google Ratings', 'Auto-Ask'], service: 'Feedback' }
+        };
+
+        function openFeatureModal(key) {
+            const data = features[key];
+            document.getElementById('featureTitle').innerText = data.title;
+            document.getElementById('featureDesc').innerText = data.desc;
+            const list = document.getElementById('featureList');
+            list.innerHTML = ''; 
+            data.list.forEach(item => list.innerHTML += `<li><i class="fa-solid fa-check"></i> ${item}</li>`);
+            const btn = document.getElementById('featureBtn');
+            btn.onclick = function() { closeModal('featureModal'); openBookingModal(data.service); };
+            featureModal.style.display = 'flex';
+        }
+
+        // 6. CHATBOT
         const chatbotToggler = document.querySelector(".chatbot-toggler");
         const closeChat = document.querySelector(".close-chat");
         const chatInput = document.getElementById("chatInput");
@@ -417,53 +533,69 @@
 
                 if (reply.includes("[OPEN_DEMO_FORM]")) {
                     reply = reply.replace("[OPEN_DEMO_FORM]", "").trim();
-                    setTimeout(() => openModal(), 1000);
+                    setTimeout(() => openBookingModal('General'), 1000);
                 }
                 if (reply.includes("[ANGRY_CUSTOMER]")) {
                     reply = reply.replace("[ANGRY_CUSTOMER]", "").trim();
                     chatHeader.style.background = "#ef4444";
-                    setTimeout(() => alert("⚠️ Priority Support Activated!"), 500);
+                    setTimeout(() => alert("⚠️ Connecting Manager..."), 500);
                 }
 
                 chatBox.removeChild(loadLi);
                 chatBox.appendChild(createChatLi(reply, "bot"));
                 chatHistory.push({ role: "assistant", content: reply });
-                chatBox.scrollTo(0, chatBox.scrollHeight);
             } catch (err) {
                 chatBox.removeChild(loadLi);
-                chatBox.appendChild(createChatLi("Connection failed. Is server running?", "bot"));
+                chatBox.appendChild(createChatLi("My brain is sleeping. (Check Server)", "bot"));
             }
+            chatBox.scrollTo(0, chatBox.scrollHeight);
         };
 
         sendBtn.addEventListener("click", () => {
             const msg = chatInput.value.trim();
             if(msg) { chatInput.value = ""; generateResponse(msg); }
         });
-        chatInput.addEventListener("keypress", (e) => {
-            if(e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendBtn.click(); }
-        });
-
         chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
         closeChat.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
 
-        // FORM SUBMIT
-        const demoForm = document.getElementById('demo-form');
-        if(demoForm) {
-            demoForm.addEventListener('submit', function(e) {
+        // 7. FORM SUBMISSION (NO ALERT FIX)
+        const form = document.getElementById('demo-form');
+        if(form) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const btn = document.getElementById('formSubmitBtn');
                 const originalText = btn.innerText;
                 btn.innerText = "Sending..."; btn.disabled = true;
-                const json = JSON.stringify(Object.fromEntries(new FormData(demoForm)));
                 
+                const formData = new FormData(form);
+                const json = JSON.stringify(Object.fromEntries(formData));
+
                 fetch('https://api.web3forms.com/submit', {
                     method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: json
-                }).then(async (res) => {
-                    if (res.status == 200) { alert("✅ Demo Booked! We will call you."); demoForm.reset(); closeModal(); }
-                    else { alert("Error sending."); }
-                }).catch(() => alert("Connection Error!"))
-                .then(() => { btn.innerText = originalText; btn.disabled = false; });
+                })
+                .then(async (res) => {
+                    if (res.status == 200) {
+                        // SUCCESS: Switch Views
+                        form.reset();
+                        formView.style.display = "none";
+                        successView.style.display = "block";
+                        
+                        // Save to DB (Silent)
+                        try {
+                            const dbUrl = API_URL.replace('/chat', '/book');
+                            fetch(dbUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json });
+                        } catch (err) { console.log("DB Skipped"); }
+
+                    } else {
+                        alert("⚠️ Error sending email. Check internet.");
+                        btn.innerText = originalText; btn.disabled = false;
+                    }
+                })
+                .catch(() => {
+                    alert("Connection Failed. Check internet.");
+                    btn.innerText = originalText; btn.disabled = false;
+                });
             });
         }
     </script>
