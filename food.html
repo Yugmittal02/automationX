@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetsHub - Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FFFDD0',     // Cream
+                            primary: '#e11d48', // Rose Red
+                            dark: '#be123c',    // Dark Rose
+                            accent: '#f97316',  // Orange
+                        }
+                    },
+                    animation: {
+                        'slide-in': 'slideIn 0.3s ease-out forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'pop': 'pop 0.2s ease-out',
+                    },
+                    keyframes: {
+                        slideIn: { '0%': { transform: 'translateX(100%)' }, '100%': { transform: 'translateX(0)' } },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        pop: { '0%': { transform: 'scale(0.9)' }, '100%': { transform: 'scale(1)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FFFDD0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        input:focus, select:focus { ring: 2px; ring-color: #e11d48; }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col relative">
+
+    <div id="app" class="max-w-md mx-auto bg-white min-h-screen shadow-2xl relative overflow-hidden flex flex-col"></div>
+
+    <script>
+        // --- DATABASE ---
+        const db = {
+            products: [
+                { id: 1, name: "Kaju Katli", price: 800, category: "Sweets", image: "🍬" },
+                { id: 2, name: "Gulab Jamun", price: 40, category: "Sweets", image: "🥣" },
+                { id: 3, name: "Rasgulla", price: 30, category: "Sweets", image: "⚪" },
+                { id: 100, name: "Aloo Samosa", price: 20, category: "Namkeen", image: "🥟" },
+                { id: 101, name: "Pyaz Kachori", price: 35, category: "Namkeen", image: "🍘" },
+                { id: 200, name: "Vanilla Scoop", price: 60, category: "Ice Cream", image: "🍦" },
+                { id: 300, name: "Pani Puri", price: 40, category: "Chaat", image: "🥙" },
+                { id: 301, name: "Papdi Chaat", price: 80, category: "Chaat", image: "🥗" },
+                { id: 400, name: "Mango Lassi", price: 60, category: "Drinks", image: "🥤" },
+                { id: 401, name: "Masala Chai", price: 20, category: "Drinks", image: "☕" },
+            ],
+            favorites: [], // Store IDs
+            orders: [],
+            loyaltyHistory: [
+                { id: 1, desc: "Welcome Bonus", points: 50, date: "Joined" },
+                { id: 2, desc: "Order #SWT-1001", points: 20, date: "Yesterday" }
+            ]
+        };
+
+        // --- STATE ---
+        const state = {
+            view: 'landing', 
+            activeCategory: 'All',
+            isSidebarOpen: false,
+            isChatOpen: false,
+            isAddItemModalOpen: false,
+            user: { name: '', phone: '', points: 70 },
+            cart: [],
+            currentOrder: null,
+            // Temporary storage for Admin Add Item form
+            newItem: { name: '', price: '', category: 'Sweets' }
+        };
+
+        // --- CONTROLLERS ---
+
+        function toggleSidebar() { state.isSidebarOpen = !state.isSidebarOpen; render(); }
+        function toggleChat() { state.isChatOpen = !state.isChatOpen; render(); }
+        function toggleAddItemModal() { state.isAddItemModalOpen = !state.isAddItemModalOpen; render(); }
+
+        function setCategory(cat) { state.activeCategory = cat; render(); }
+
+        function addToCart(productId) {
+            const product = db.products.find(p => p.id === productId);
+            const existing = state.cart.find(i => i.id === productId);
+            if (existing) existing.qty++;
+            else state.cart.push({ ...product, qty: 1 });
+            showToast(`Added ${product.name}`);
+            render();
+        }
+
+        function toggleFavorite(productId) {
+            const idx = db.favorites.indexOf(productId);
+            if (idx === -1) {
+                db.favorites.push(productId);
+                showToast("Added to Favorites");
+            } else {
+                db.favorites.splice(idx, 1);
+                showToast("Removed from Favorites");
+            }
+            render();
+        }
+
+        function updateCartQty(productId, change) {
+            const item = state.cart.find(i => i.id === productId);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) state.cart = state.cart.filter(i => i.id !== productId);
+                render();
+            }
+        }
+
+        function createOrder(mode) {
+            if(state.cart.length === 0) return;
+            const total = state.cart.reduce((a,b)=>a+(b.price*b.qty),0);
+            const pointsEarned = Math.floor(total / 10);
+            const token = "SWT-" + Math.floor(1000 + Math.random() * 9000);
+            
+            const newOrder = {
+                id: Date.now(),
+                token: token,
+                items: [...state.cart],
+                total: total,
+                mode: mode, 
+                status: mode === 'online' ? 'ACCEPTED' : 'QUEUED',
+                date: new Date().toLocaleString()
+            };
+
+            db.orders.push(newOrder);
+            // Update Loyalty
+            state.user.points += pointsEarned;
+            db.loyaltyHistory.unshift({ id: Date.now(), desc: `Order #${token}`, points: pointsEarned, date: "Just Now" });
+
+            state.currentOrder = newOrder;
+            state.cart = [];
+            state.view = 'success';
+            render();
+        }
+
+        function addNewProduct() {
+            if(!state.newItem.name || !state.newItem.price) return alert("Fill all fields");
+            
+            const images = { "Sweets": "🍬", "Namkeen": "🥟", "Drinks": "🥤", "Ice Cream": "🍦", "Chaat": "🥗" };
+            
+            db.products.push({
+                id: Date.now(),
+                name: state.newItem.name,
+                price: parseInt(state.newItem.price),
+                category: state.newItem.category,
+                image: images[state.newItem.category] || "📦"
+            });
+            
+            state.newItem = { name: '', price: '', category: 'Sweets' }; // Reset
+            toggleAddItemModal();
+            showToast("Item Added to Menu!");
+            render();
+        }
+
+        // --- COMPONENTS ---
+
+        const Sidebar = () => `
+            <div class="absolute inset-0 z-40 pointer-events-none">
+                <div onclick="toggleSidebar()" class="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${state.isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}"></div>
+                <div class="absolute top-0 bottom-0 left-0 w-72 bg-white shadow-2xl transform transition-transform duration-300 pointer-events-auto ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}">
+                    
+                    <div class="h-48 bg-gradient-to-br from-brand-primary to-brand-dark flex flex-col justify-end p-6 text-white relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-9xl opacity-10 rotate-12">🍬</div>
+                        <div class="w-16 h-16 bg-white rounded-full text-brand-primary flex items-center justify-center text-3xl font-bold mb-3 shadow-lg border-4 border-brand-accent/30">
+                            ${state.user.name.charAt(0) || 'G'}
+                        </div>
+                        <div class="font-bold text-2xl">${state.user.name || 'Guest'}</div>
+                        <div class="text-sm opacity-80">+91 ${state.user.phone || '----------'}</div>
+                    </div>
+
+                    <div class="p-4 space-y-1">
+                         <div onclick="state.view='loyalty'; toggleSidebar(); render()" class="bg-orange-50 border border-orange-100 p-3 rounded-xl flex items-center justify-between mb-4 cursor-pointer hover:bg-orange-100 transition">
+                            <div>
+                                <div class="text-xs text-gray-500 font-bold uppercase">Loyalty Balance</div>
+                                <div class="font-bold text-xl text-brand-accent">${state.user.points} Pts</div>
+                            </div>
+                            <div class="bg-white w-10 h-10 rounded-full flex items-center justify-center text-orange-500 shadow-sm"><i class="fa-solid fa-crown"></i></div>
+                        </div>
+
+                        <button onclick="state.view='history'; toggleSidebar(); render()" class="w-full p-3 hover:bg-gray-50 rounded-lg flex items-center gap-4 text-gray-700 text-left">
+                            <i class="fa-solid fa-clock-rotate-left w-6 text-center text-gray-400"></i> My Orders
+                        </button>
+                        <button onclick="state.view='favorites'; toggleSidebar(); render()" class="w-full p-3 hover:bg-gray-50 rounded-lg flex items-center gap-4 text-gray-700 text-left">
+                            <i class="fa-solid fa-heart w-6 text-center text-gray-400"></i> Favorites
+                        </button>
+                        <button onclick="state.view='settings'; toggleSidebar(); render()" class="w-full p-3 hover:bg-gray-50 rounded-lg flex items-center gap-4 text-gray-700 text-left">
+                            <i class="fa-solid fa-gear w-6 text-center text-gray-400"></i> Settings
+                        </button>
+                        
+                        <hr class="border-gray-100 my-2">
+                        
+                        <button onclick="state.view='staff'; toggleSidebar(); render()" class="w-full p-3 hover:bg-blue-50 text-blue-600 rounded-lg flex items-center gap-4 text-left font-medium">
+                            <i class="fa-solid fa-user-shield w-6 text-center"></i> Staff / Admin
+                        </button>
+                        <button onclick="location.reload()" class="w-full p-3 hover:bg-red-50 text-red-500 rounded-lg flex items-center gap-4 text-left">
+                            <i class="fa-solid fa-power-off w-6 text-center"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // --- VIEWS ---
+
+        const Views = {
+            landing: () => `
+                <div class="flex-1 flex flex-col justify-center items-center p-8 bg-brand-bg relative">
+                     <div class="absolute top-0 left-0 w-full h-full opacity-5 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="relative z-10 text-center">
+                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl shadow-2xl mx-auto mb-6 animate-pop">🍬</div>
+                        <h1 class="text-5xl font-bold text-brand-primary mb-2">SweetsHub</h1>
+                        <p class="text-gray-500 mb-8 text-lg">Authentic Taste, Modern Way.</p>
+                        
+                        <div class="w-full space-y-4 max-w-xs mx-auto">
+                            <input type="text" placeholder="Your Name" class="w-full p-4 rounded-xl border-none shadow-lg text-lg outline-none ring-1 ring-transparent focus:ring-brand-primary transition" oninput="state.user.name = this.value">
+                            <input type="tel" placeholder="Mobile Number" class="w-full p-4 rounded-xl border-none shadow-lg text-lg outline-none ring-1 ring-transparent focus:ring-brand-primary transition" oninput="state.user.phone = this.value">
+                            <button onclick="if(state.user.name && state.user.phone) { state.view = 'menu'; render(); } else { showToast('Enter details to continue'); }" class="w-full bg-brand-primary text-white p-4 rounded-xl font-bold text-xl shadow-xl hover:bg-brand-dark active:scale-95 transition-transform">
+                                Start Ordering
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            menu: () => {
+                const visibleProducts = state.activeCategory === 'All' ? db.products : db.products.filter(p => p.category === state.activeCategory);
+                const categories = ['All', 'Sweets', 'Namkeen', 'Chaat', 'Drinks', 'Ice Cream'];
+
+                return `
+                <div class="flex flex-col h-screen bg-gray-50">
+                    ${Sidebar()}
+                    
+                    <div class="bg-white p-4 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                        <button onclick="toggleSidebar()" class="text-xl text-gray-700 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full"><i class="fa-solid fa-bars"></i></button>
+                        <div class="font-bold text-lg tracking-tight text-brand-primary">SweetsHub</div>
+                        <button onclick="state.view='cart'; render()" class="relative w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full">
+                            <i class="fa-solid fa-bag-shopping text-xl text-gray-700"></i>
+                            ${state.cart.length > 0 ? `<span class="absolute top-1 right-1 bg-brand-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">${state.cart.reduce((a,b)=>a+b.qty,0)}</span>` : ''}
+                        </button>
+                    </div>
+
+                    <div class="px-4 py-2 bg-white pb-4">
+                        <div class="relative">
+                            <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" placeholder="Search for Rasmalai, Samosa..." class="w-full pl-10 p-2.5 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-brand-primary/20 transition">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide bg-white border-b border-gray-100">
+                        ${categories.map(cat => `
+                            <button onclick="setCategory('${cat}')" class="whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${state.activeCategory === cat ? 'bg-brand-primary text-white border-brand-primary shadow-md' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}">${cat}</button>
+                        `).join('')}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 p-4 pb-24 overflow-y-auto bg-gray-50 flex-1">
+                        ${visibleProducts.map(p => `
+                            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col relative group overflow-hidden">
+                                <button onclick="toggleFavorite(${p.id})" class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow-sm ${db.favorites.includes(p.id) ? 'text-red-500' : 'text-gray-300'} hover:scale-110 transition">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                                <div class="h-24 flex items-center justify-center text-5xl mb-2 transform group-hover:scale-110 transition duration-300">${p.image}</div>
+                                <div class="mt-auto">
+                                    <h3 class="font-bold text-gray-800 text-sm mb-1 leading-tight">${p.name}</h3>
+                                    <div class="text-xs text-gray-400 mb-2">${p.category}</div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-brand-accent">₹${p.price}</span>
+                                        <button onclick="addToCart(${p.id})" class="bg-brand-primary text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-lg hover:bg-brand-dark active:scale-90 transition"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="fixed bottom-6 right-6 z-30">
+                         <button onclick="toggleChat()" class="w-14 h-14 bg-brand-primary text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition transform"><i class="fa-solid fa-headset"></i></button>
+                    </div>
+                </div>
+            `},
+
+            loyalty: () => `
+                <div class="h-screen flex flex-col bg-white animate-slide-in">
+                     <div class="p-4 flex items-center gap-4 border-b">
+                        <button onclick="state.view='menu'; render()" class="text-gray-500"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-bold text-xl">Loyalty Points</h2>
+                    </div>
+                    <div class="p-6 flex flex-col items-center bg-brand-bg">
+                        <div class="w-32 h-32 rounded-full border-4 border-orange-300 flex flex-col items-center justify-center bg-white shadow-xl mb-4">
+                            <span class="text-3xl font-bold text-brand-accent">${state.user.points}</span>
+                            <span class="text-xs text-gray-500 uppercase">Points</span>
+                        </div>
+                        <p class="text-center text-gray-600 text-sm px-8">Earn 1 Point for every ₹10 spent. Redeem them for special discounts!</p>
+                    </div>
+                    <div class="flex-1 bg-white rounded-t-3xl -mt-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] p-6 overflow-y-auto">
+                        <h3 class="font-bold mb-4 text-gray-800">History</h3>
+                        <div class="space-y-4">
+                            ${db.loyaltyHistory.map(h => `
+                                <div class="flex justify-between items-center pb-4 border-b border-gray-50 last:border-0">
+                                    <div>
+                                        <div class="font-bold text-gray-700">${h.desc}</div>
+                                        <div class="text-xs text-gray-400">${h.date}</div>
+                                    </div>
+                                    <div class="font-bold text-green-600">+${h.points}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            favorites: () => `
+                <div class="h-screen flex flex-col bg-gray-50 animate-slide-in">
+                     <div class="p-4 flex items-center gap-4 bg-white shadow-sm sticky top-0 z-10">
+                        <button onclick="state.view='menu'; render()" class="text-gray-500"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-bold text-xl">My Favorites</h2>
+                    </div>
+                    <div class="p-4 grid grid-cols-1 gap-3 overflow-y-auto">
+                        ${db.favorites.length === 0 ? '<div class="text-center text-gray-400 mt-10">No favorites yet. ❤️ some items!</div>' : 
+                        db.products.filter(p => db.favorites.includes(p.id)).map(p => `
+                            <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                                <div class="text-3xl">${p.image}</div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold">${p.name}</h4>
+                                    <div class="text-xs text-gray-500">${p.category}</div>
+                                </div>
+                                <button onclick="toggleFavorite(${p.id})" class="text-red-500"><i class="fa-solid fa-heart"></i></button>
+                                <button onclick="addToCart(${p.id})" class="bg-brand-primary text-white px-3 py-1 rounded-lg text-sm font-bold">Add</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `,
+
+            settings: () => `
+                <div class="h-screen flex flex-col bg-white animate-slide-in">
+                     <div class="p-4 flex items-center gap-4 border-b">
+                        <button onclick="state.view='menu'; render()" class="text-gray-500"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-bold text-xl">Settings</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Display Name</label>
+                            <input type="text" value="${state.user.name}" onchange="state.user.name = this.value" class="w-full p-3 bg-gray-50 rounded-lg outline-none border focus:border-brand-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" value="${state.user.phone}" readonly class="w-full p-3 bg-gray-100 rounded-lg text-gray-500 cursor-not-allowed">
+                            <div class="text-xs text-gray-400 mt-1">Contact support to update phone number.</div>
+                        </div>
+                        <div class="flex items-center justify-between pt-4">
+                            <span class="font-medium">Push Notifications</span>
+                            <input type="checkbox" checked class="accent-brand-primary w-5 h-5">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">WhatsApp Invoices</span>
+                            <input type="checkbox" checked class="accent-brand-primary w-5 h-5">
+                        </div>
+                        <button onclick="showToast('Settings Saved'); state.view='menu'; render()" class="w-full bg-brand-primary text-white p-4 rounded-xl font-bold mt-8">Save Changes</button>
+                    </div>
+                </div>
+            `,
+
+            staff: () => {
+                return `
+                <div class="bg-gray-100 min-h-screen flex flex-col relative">
+                    <div class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg">
+                        <div>
+                            <h2 class="font-bold text-lg">Admin Panel</h2>
+                            <p class="text-xs text-gray-400">Manage Orders & Menu</p>
+                        </div>
+                        <button onclick="state.view='menu'; render()" class="bg-gray-800 px-3 py-1 rounded text-xs border border-gray-700">Exit</button>
+                    </div>
+
+                    ${state.isAddItemModalOpen ? `
+                        <div class="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+                            <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+                                <div class="bg-brand-primary p-4 text-white font-bold flex justify-between items-center">
+                                    <span>Add New Item</span>
+                                    <button onclick="toggleAddItemModal()"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="p-6 space-y-4">
+                                    <div>
+                                        <label class="text-xs font-bold text-gray-500 uppercase">Item Name</label>
+                                        <input type="text" placeholder="e.g. Special Burfi" class="w-full p-3 border rounded-lg outline-none focus:border-brand-primary" oninput="state.newItem.name=this.value">
+                                    </div>
+                                    <div class="flex gap-4">
+                                        <div class="flex-1">
+                                            <label class="text-xs font-bold text-gray-500 uppercase">Price (₹)</label>
+                                            <input type="number" placeholder="00" class="w-full p-3 border rounded-lg outline-none focus:border-brand-primary" oninput="state.newItem.price=this.value">
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="text-xs font-bold text-gray-500 uppercase">Category</label>
+                                            <select class="w-full p-3 border rounded-lg outline-none bg-white" onchange="state.newItem.category=this.value">
+                                                <option>Sweets</option>
+                                                <option>Namkeen</option>
+                                                <option>Chaat</option>
+                                                <option>Drinks</option>
+                                                <option>Ice Cream</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button onclick="addNewProduct()" class="w-full bg-brand-primary text-white py-3 rounded-xl font-bold shadow-lg mt-4">Add Product</button>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="p-4 bg-white shadow-sm flex gap-2 overflow-x-auto">
+                        <button onclick="toggleAddItemModal()" class="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-lg font-bold shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-plus"></i> Add Item
+                        </button>
+                         <div class="flex gap-2">
+                             <span class="px-3 py-2 bg-gray-100 rounded-lg text-xs font-bold text-gray-500 flex items-center">Sweets: ${db.products.filter(p=>p.category=='Sweets').length}</span>
+                             <span class="px-3 py-2 bg-gray-100 rounded-lg text-xs font-bold text-gray-500 flex items-center">Drinks: ${db.products.filter(p=>p.category=='Drinks').length}</span>
+                             <span class="px-3 py-2 bg-gray-100 rounded-lg text-xs font-bold text-gray-500 flex items-center">Chaat: ${db.products.filter(p=>p.category=='Chaat').length}</span>
+                         </div>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                        <div>
+                            <h3 class="text-gray-500 font-bold text-xs uppercase mb-2 flex items-center gap-2"><i class="fa-solid fa-cash-register"></i> Live Orders</h3>
+                            ${db.orders.filter(o => o.status === 'QUEUED').length === 0 ? '<div class="bg-white p-4 rounded text-center text-sm text-gray-400 border border-dashed">No pending orders</div>' : ''}
+                            <div class="space-y-2">
+                                ${db.orders.filter(o => o.status === 'QUEUED').map(o => `
+                                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-500 flex justify-between items-center">
+                                        <div>
+                                            <div class="font-bold text-xl flex items-center gap-2">
+                                                ${o.token}
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">₹${o.total} • ${o.items.length} Items</div>
+                                        </div>
+                                        <button onclick="db.orders.find(x=>x.id==${o.id}).status='ACCEPTED'; render()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow">Collect</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-gray-500 font-bold text-xs uppercase mb-2 flex items-center gap-2"><i class="fa-solid fa-boxes-stacked"></i> Menu Items</h3>
+                            <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                                ${db.products.map(p => `
+                                    <div class="flex justify-between items-center p-3 border-b last:border-0">
+                                        <div class="flex items-center gap-3">
+                                            <div class="text-xl">${p.image}</div>
+                                            <div>
+                                                <div class="font-bold text-sm">${p.name}</div>
+                                                <div class="text-xs text-gray-400">${p.category}</div>
+                                            </div>
+                                        </div>
+                                        <div class="font-bold text-sm">₹${p.price}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `},
+            
+            // Helper for Cart, Success, History (Reused from previous logic, kept simple for length)
+            cart: () => `
+                <div class="flex flex-col h-screen bg-white">
+                     <div class="p-4 flex items-center gap-4 border-b sticky top-0 bg-white z-10">
+                        <button onclick="state.view='menu'; render()" class="text-gray-500"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-bold text-xl">Cart</h2>
+                    </div>
+                    <div class="flex-1 p-4 overflow-y-auto">
+                        ${state.cart.length === 0 ? '<div class="text-center mt-10 text-gray-400">Empty Cart</div>' : state.cart.map(i => `
+                            <div class="flex justify-between items-center mb-4 border-b pb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-2xl">${i.image}</div>
+                                    <div><h4 class="font-bold">${i.name}</h4><p class="text-xs">₹${i.price}</p></div>
+                                </div>
+                                <div class="flex items-center bg-gray-100 rounded-lg">
+                                    <button onclick="updateCartQty(${i.id}, -1)" class="w-8 h-8 font-bold">-</button>
+                                    <span class="w-6 text-center text-sm">${i.qty}</span>
+                                    <button onclick="updateCartQty(${i.id}, 1)" class="w-8 h-8 font-bold text-brand-primary">+</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${state.cart.length > 0 ? `
+                        <div class="p-4 border-t bg-white shadow-xl">
+                            <div class="flex justify-between font-bold text-xl mb-4"><span>Total</span> <span>₹${state.cart.reduce((a,b)=>a+(b.price*b.qty),0)}</span></div>
+                            <button onclick="createOrder('online')" class="w-full bg-brand-primary text-white py-3 rounded-xl font-bold shadow-lg mb-2">Pay Online</button>
+                            <button onclick="createOrder('cash')" class="w-full border-2 border-gray-200 py-3 rounded-xl font-bold text-gray-600">Pay Cash</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `,
+            success: () => `
+                <div class="h-screen flex flex-col justify-center items-center bg-brand-primary text-white p-6">
+                    <div class="bg-white text-brand-primary w-24 h-24 rounded-full flex items-center justify-center text-4xl mb-6 shadow-xl animate-pop"><i class="fa-solid fa-check"></i></div>
+                    <h2 class="text-3xl font-bold mb-2">Order Placed!</h2>
+                    <div class="bg-white text-gray-800 p-6 rounded-2xl w-full shadow-2xl mt-8">
+                        <div class="text-xs text-gray-500 uppercase">Token</div>
+                        <div class="text-5xl font-black text-brand-primary mb-2">${state.currentOrder.token}</div>
+                        <div class="text-sm text-gray-500">Loyalty Points Earned: +${Math.floor(state.currentOrder.total/10)}</div>
+                    </div>
+                    <button onclick="state.view='menu'; render()" class="mt-8 border border-white/30 px-6 py-2 rounded-full hover:bg-white/10">Done</button>
+                </div>
+            `,
+            history: () => `
+                <div class="h-screen bg-gray-50 overflow-y-auto">
+                    <div class="p-4 bg-white flex items-center gap-4 sticky top-0 shadow-sm">
+                        <button onclick="state.view='menu'; render()" class="text-gray-500"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2 class="font-bold text-xl">My Orders</h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        ${db.orders.length === 0 ? '<div class="text-center text-gray-400 mt-10">No past orders</div>' : db.orders.map(o => `
+                            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-brand-primary">
+                                <div class="flex justify-between font-bold"><span>${o.token}</span> <span>₹${o.total}</span></div>
+                                <div class="text-xs text-gray-500 mt-1">${o.items.map(i=>i.name).join(', ')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `
+        };
+
+        // --- RENDERER & UTILS ---
+        function render() {
+            const app = document.getElementById('app');
+            if(Views[state.view]) app.innerHTML = Views[state.view]();
+        }
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = "fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-2 rounded-full shadow-lg z-50 text-sm animate-fade-in";
+            t.innerText = msg;
+            document.body.appendChild(t);
+            setTimeout(()=>t.remove(), 2000);
+        }
+
+        render();
+    </script>
+</body>
+</html>
