@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomationX | The OS for Bharat's MSMEs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], },
+                    colors: {
+                        brand: { 900: '#0f172a', 800: '#1e293b', accent: '#3b82f6', success: '#10b981' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Premium Gradients & Animations */
+        body { background-color: #020617; color: #f8fafc; overflow-x: hidden; }
+        .text-gradient {
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-gold {
+            background: linear-gradient(to right, #facc15, #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .blob {
+            position: absolute; filter: blur(80px); z-index: -1; opacity: 0.4;
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px, -20px); } }
+        
+        /* Mockup Animation */
+        .typing-anim::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Modal Transitions */
+        .modal-active { display: flex !important; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="blob bg-blue-600 w-96 h-96 rounded-full top-0 left-0"></div>
+    <div class="blob bg-emerald-600 w-96 h-96 rounded-full bottom-0 right-0"></div>
+
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-lg flex items-center justify-center text-white text-sm">X</div>
+                Automation<span class="text-blue-400">X</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-slate-300">
+                <a href="#problem" class="hover:text-white transition">The Problem</a>
+                <a href="#solution" class="hover:text-white transition">Our Solution</a>
+                <a href="#pricing" class="hover:text-white transition">Pricing Model</a>
+            </div>
+            <button onclick="openModal('Partner Inquiry')" class="bg-white text-slate-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-blue-50 transition transform hover:scale-105">
+                Partner With Us
+            </button>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-20 px-6 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            
+            <div data-aos="fade-right">
+                <div class="inline-block px-4 py-1 rounded-full bg-blue-900/30 border border-blue-500/30 text-blue-300 text-xs font-bold mb-6 tracking-widest uppercase">
+                    Revolutionizing Unorganized Retail
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-bold leading-tight mb-6">
+                    The Operating System for <br>
+                    <span class="text-gradient">Bharat's MSMEs</span>
+                </h1>
+                <p class="text-slate-400 text-lg mb-8 leading-relaxed max-w-lg">
+                    We don't just sell software. We digitize operations for the <strong>12 Million</strong> disconnected garages & shops in India using Voice AI & WhatsApp.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="openModal('Shop Deployment Request')" class="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-center shadow-lg shadow-blue-600/20 transition transform hover:-translate-y-1">
+                        Deploy in Your Shop
+                    </button>
+                    <a href="https://wa.me/918619152422" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-xl font-bold text-center transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Watch Demo
+                    </a>
+                </div>
+                
+                <div class="mt-12 flex items-center gap-4 text-sm text-slate-500">
+                    <div class="flex -space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-slate-700 border-2 border-slate-900"></div>
+                        <div class="w-8 h-8 rounded-full bg-slate-600 border-2 border-slate-900"></div>
+                        <div class="w-8 h-8 rounded-full bg-slate-500 border-2 border-slate-900"></div>
+                    </div>
+                    <p>Trusted by <strong>50+ Early Adopters</strong> in Jaipur</p>
+                </div>
+            </div>
+
+            <div class="relative" data-aos="fade-left">
+                <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-3xl blur-2xl opacity-20"></div>
+                
+                <div class="relative mx-auto bg-slate-900 border-4 border-slate-800 rounded-[2rem] shadow-2xl max-w-sm overflow-hidden h-[500px]">
+                    <div class="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700">
+                        <div class="w-20 h-4 bg-slate-700 rounded"></div>
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-microphone"></i></div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="text-center">
+                            <p class="text-slate-500 text-xs mb-2">AI Voice Assistant Active</p>
+                            <div class="inline-block p-3 bg-blue-600/10 text-blue-400 rounded-lg border border-blue-500/20 text-sm font-mono typing-anim">
+                                "Honda City Service, Bill ₹2500"
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 transform scale-95 opacity-50 animate-pulse">
+                            <div class="flex justify-between mb-2"><div class="w-12 h-3 bg-slate-600 rounded"></div><div class="w-8 h-3 bg-emerald-500/20 rounded"></div></div>
+                            <div class="w-full h-2 bg-slate-700 rounded"></div>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-emerald-500 shadow-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-bold text-white">Invoice Created</h4>
+                                    <p class="text-xs text-slate-400">Sent via WhatsApp ✅</p>
+                                </div>
+                                <span class="text-emerald-400 font-bold text-xl">₹2,500</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-6 right-6 w-12 h-12 bg-emerald-500 rounded-full shadow-lg flex items-center justify-center text-white">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problem" class="py-20 bg-slate-950/50 border-y border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Why AutomationX?</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Existing SaaS players (Zoho/Vyapar) build for Accountants. <br>We build for the <strong>Mechanic & Helper</strong>.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 hover:border-red-500/50 transition group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-12 h-12 bg-red-900/30 text-red-400 rounded-lg flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">The "Theft" Problem</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Shop owners lose 15-20% inventory due to staff theft. Manual registers can't track live stock.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500/50 transition group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-12 h-12 bg-blue-900/30 text-blue-400 rounded-lg flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-language"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">The "Language" Barrier</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Staff can't type in English. Our <strong>Hindi Voice Engine</strong> removes this friction completely.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition group" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-12 h-12 bg-emerald-900/30 text-emerald-400 rounded-lg flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">The "Device" Gap</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">They don't have laptops. AutomationX runs seamlessly on <strong>₹5,000 Android Phones</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solution" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-12 mb-20">
+                <div class="md:w-1/2" data-aos="fade-right">
+                    <h3 class="text-emerald-400 font-bold tracking-widest uppercase text-sm mb-2">Zero Typing</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Voice-to-Invoice Engine</h2>
+                    <p class="text-slate-400 leading-relaxed mb-6">
+                        Forget keyboards. Just speak. Our proprietary logic converts <br>
+                        <span class="text-white italic">"Swift ki service aur oil change"</span> <br>
+                        into a professional GST Invoice instantly.
+                    </p>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-500"></i> Works in noisy garages</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-500"></i> 98% Accuracy in Hinglish</li>
+                    </ul>
+                </div>
+                <div class="md:w-1/2 bg-slate-800/50 p-8 rounded-3xl border border-slate-700" data-aos="fade-left">
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center"><i class="fa-solid fa-microphone text-white"></i></div>
+                            <div class="h-2 w-24 bg-slate-600 rounded animate-pulse"></div>
+                            <div class="h-2 w-12 bg-slate-600 rounded animate-pulse delay-75"></div>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+                            <div class="flex justify-between text-sm text-slate-300 mb-2"><span>Service</span><span>Price</span></div>
+                            <div class="flex justify-between text-white font-bold"><span>Oil Change 5W30</span><span>₹1,200</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <h3 class="text-blue-400 font-bold tracking-widest uppercase text-sm mb-2">Total Control</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Staff Accountability System</h2>
+                    <p class="text-slate-400 leading-relaxed mb-6">
+                        The owner knows everything. Track who came when, what work they did, and prevent inventory theft with role-based access.
+                    </p>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-blue-500"></i> Unique Login for Every Mechanic</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-blue-500"></i> Daily Work-Log Calendar</li>
+                    </ul>
+                </div>
+                <div class="md:w-1/2 bg-slate-800/50 p-8 rounded-3xl border border-slate-700" data-aos="fade-right">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-red-500/30 text-center">
+                            <div class="text-red-400 text-2xl mb-1"><i class="fa-solid fa-user-clock"></i></div>
+                            <div class="text-slate-400 text-xs">Absent</div>
+                            <div class="font-bold">Raju</div>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/30 text-center">
+                            <div class="text-emerald-400 text-2xl mb-1"><i class="fa-solid fa-check-circle"></i></div>
+                            <div class="text-slate-400 text-xs">Present</div>
+                            <div class="font-bold">Shyam</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-20 bg-slate-900 relative">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">Simple Pricing. <br><span class="text-gradient">No Hidden Rent.</span></h2>
+            <p class="text-slate-400 mb-12">We don't charge per user. You own the system.</p>
+
+            <div class="relative bg-slate-950 rounded-3xl border border-slate-700 shadow-2xl p-8 md:p-12 max-w-lg mx-auto hover:border-emerald-500 transition-all duration-500 group">
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-emerald-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30">
+                    RECOMMENDED FOR BUSINESS
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-slate-400 text-sm uppercase font-bold tracking-widest mb-2">One-Time Setup Fee</p>
+                    <div class="flex justify-center items-baseline gap-2">
+                        <span class="text-6xl font-bold text-white">₹2,999</span>
+                        <span class="text-slate-600 line-through text-xl">₹10,000</span>
+                    </div>
+                    <p class="text-emerald-400 text-sm font-medium mt-4 bg-emerald-900/20 inline-block px-3 py-1 rounded">Limited Time Offer</p>
+                </div>
+
+                <div class="space-y-4 text-left mb-10 pl-4 border-l-2 border-slate-800">
+                    <li class="flex items-center gap-3 text-slate-300"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span><strong>Lifetime License</strong> (Ownership)</span></li>
+                    <li class="flex items-center gap-3 text-slate-300"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>Unlimited Staff Login</span></li>
+                    <li class="flex items-center gap-3 text-slate-300"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>1st Year Cloud Server <strong>FREE</strong></span></li>
+                    <li class="flex items-center gap-3 text-slate-300"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>WhatsApp Bill Integration</span></li>
+                </div>
+
+                <div class="bg-slate-900 rounded-lg p-4 mb-8 text-xs text-slate-400 flex items-start gap-2 text-left">
+                    <i class="fa-solid fa-info-circle text-blue-400 mt-0.5"></i>
+                    <p>Only <strong>₹999/Year</strong> (AMC) from 2nd year for Data Backup & Server maintenance.</p>
+                </div>
+
+                <button onclick="openModal('Pricing Plan Inquiry')" class="block w-full py-4 bg-white text-slate-900 font-bold rounded-xl shadow hover:shadow-white/20 hover:bg-slate-200 transition-all">
+                    Get Started Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-slate-800 bg-slate-950 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+            
+            <div class="col-span-1 md:col-span-2">
+                <div class="text-xl font-bold text-white mb-2">Automation<span class="text-blue-500">X</span></div>
+                <p class="mb-4">Digitizing India, One Shop at a Time.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Company</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><button onclick="openInvestorModal()" class="hover:text-amber-400 transition text-slate-300"><i class="fa-solid fa-gem mr-2 text-xs"></i>Investor Relations</button></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Contact Us</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-phone text-blue-500 mt-1"></i>
+                        <div>
+                            <span class="block text-xs uppercase tracking-wider text-slate-500">Support & Sales</span>
+                            <a href="tel:+918619152422" class="text-white hover:text-blue-400 transition font-mono">+91 86191 52422</a>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-envelope text-blue-500 mt-1"></i>
+                        <div>
+                            <span class="block text-xs uppercase tracking-wider text-slate-500">Email</span>
+                            <a href="mailto:support@automationx.in" class="text-white hover:text-blue-400 transition">support@automationx.in</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-900 text-center md:text-left text-xs text-slate-600">
+            &copy; 2025 AutomationX Inc. All rights reserved.
+        </div>
+    </footer>
+
+    <div id="leadModal" class="fixed inset-0 z-[60] hidden justify-center items-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="glass-modal relative w-full max-w-md p-8 rounded-2xl shadow-2xl border border-slate-700 transform transition-all scale-100">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div class="w-12 h-12 bg-blue-600/20 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-rocket text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Let's Automate Your Shop</h3>
+                <p class="text-slate-400 text-sm mt-2">Fill the details. Our team will call you within 24 Hours.</p>
+            </div>
+            <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="inquirySource" name="source" value="General">
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Full Name</label>
+                    <input type="text" required placeholder="Ex. Rajesh Kumar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Mobile Number</label>
+                    <div class="flex">
+                        <span class="bg-slate-800 border border-slate-700 border-r-0 rounded-l-lg px-3 py-3 text-slate-300 flex items-center">+91</span>
+                        <input type="tel" required pattern="[0-9]{10}" placeholder="98765 43210" class="w-full bg-slate-900 border border-slate-700 rounded-r-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">I am a</label>
+                    <select class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
+                        <option value="Shop Owner">Shop Owner (MSME)</option>
+                        <option value="Distributor">Distributor / Partner</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-blue-500/25 transition transform hover:-translate-y-1 mt-4">
+                    Request Free Callback
+                </button>
+            </form>
+            <div id="successMessage" class="hidden text-center py-8">
+                <div class="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                    <i class="fa-solid fa-check text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Request Sent!</h3>
+                <p class="text-slate-400 text-sm mt-2">Sit back. Our automation expert will contact you shortly.</p>
+                <button onclick="closeModal()" class="mt-6 text-sm text-slate-500 hover:text-white underline">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="investorModal" class="fixed inset-0 z-[70] hidden justify-center items-center px-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity" onclick="closeInvestorModal()"></div>
+        <div class="glass-modal relative w-full max-w-lg p-8 rounded-2xl shadow-2xl border border-purple-500/30 transform transition-all scale-100">
+            <button onclick="closeInvestorModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-purple-500/30">
+                    <i class="fa-solid fa-gem text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Invest in Bharat's Future</h3>
+                <p class="text-slate-400 text-sm mt-2">Join us in digitizing the unorganized retail sector.</p>
+            </div>
+
+            <div class="bg-slate-900/80 p-6 rounded-xl border border-slate-700 mb-6 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-purple-400 uppercase font-bold tracking-widest mb-1">Founder's Direct Line</p>
+                    <p class="text-white font-mono text-lg">+91 86191 52422</p>
+                </div>
+                <a href="tel:+918619152422" class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-500 transition shadow-lg shadow-green-900/50">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+            </div>
+
+            <form onsubmit="handleInvestorSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Institutional / Angel Name</label>
+                    <input type="text" required placeholder="VC Fund or Name" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Work Email</label>
+                    <input type="email" required placeholder="partner@fund.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-purple-500/25 transition transform hover:-translate-y-1 mt-2">
+                    Request Pitch Deck
+                </button>
+            </form>
+             <p class="text-center text-xs text-slate-500 mt-4">Protected by NDA. Accredited Investors Only.</p>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // --- CUSTOMER MODAL LOGIC ---
+        const leadModal = document.getElementById('leadModal');
+        const form = document.getElementById('contactForm');
+        const successMsg = document.getElementById('successMessage');
+        const sourceInput = document.getElementById('inquirySource');
+
+        function openModal(source) {
+            form.reset();
+            form.classList.remove('hidden');
+            successMsg.classList.add('hidden');
+            sourceInput.value = source || 'General';
+            leadModal.classList.remove('hidden');
+            leadModal.classList.add('flex');
+        }
+        function closeModal() {
+            leadModal.classList.add('hidden');
+            leadModal.classList.remove('flex');
+        }
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            setTimeout(() => {
+                form.classList.add('hidden');
+                successMsg.classList.remove('hidden');
+                btn.innerText = "Request Free Callback";
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // --- INVESTOR MODAL LOGIC ---
+        const investorModal = document.getElementById('investorModal');
+        function openInvestorModal() {
+            investorModal.classList.remove('hidden');
+            investorModal.classList.add('flex');
+        }
+        function closeInvestorModal() {
+            investorModal.classList.add('hidden');
+            investorModal.classList.remove('flex');
+        }
+        function handleInvestorSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "Sending Request...";
+            setTimeout(() => {
+                btn.innerText = "Request Sent Successfully";
+                btn.classList.add("bg-green-600");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
